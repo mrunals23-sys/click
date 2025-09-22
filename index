@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Can We Date? 💖</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      animation: float 3s ease-in-out infinite;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card h1 {
+      font-size: 2.5rem;
+      color: #ff4b5c;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      margin: 10px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      position: absolute;
+      display: inline-block;
+      transition: 0.3s;
+    }
+
+    .yes {
+      background: #ff4b5c;
+      color: white;
+      position: relative;
+      animation: pulseGlow 1.5s infinite, bounce 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(255, 75, 92, 0.7); }
+      70% { box-shadow: 0 0 20px 20px rgba(255, 75, 92, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 75, 92, 0); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .yes:hover {
+      background: #ff1e3c;
+      transform: scale(1.1);
+    }
+
+    .no {
+      background: #ddd;
+      color: #333;
+    }
+
+    .wiggle {
+      animation: wiggle 0.4s ease;
+    }
+
+    @keyframes wiggle {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(10deg); }
+      50% { transform: rotate(-10deg); }
+      75% { transform: rotate(10deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .bounce {
+      transition: top 0.6s cubic-bezier(.28,.84,.42,1), left 0.6s cubic-bezier(.28,.84,.42,1);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      opacity: 0.9;
+      border-radius: 50%;
+      animation: fall 3s linear forwards;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(600px) rotate(720deg); opacity: 0; }
+    }
+
+    .final-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      color: #ff1e3c;
+      font-weight: bold;
+      text-shadow: 0 0 20px rgba(255,0,100,0.8);
+      opacity: 0;
+      animation: popIn 1s forwards, heartbeat 1.5s infinite 1s;
+      z-index: 100;
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="mainCard">
+    <h1>Can we date? 💕</h1>
+    <button class="btn yes" onclick="yesAnswer()">Yes 💖</button>
+    <button class="btn no bounce" id="noBtn">No 🙈</button>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const mainCard = document.getElementById('mainCard');
+
+    function yesAnswer() {
+      mainCard.style.display = "none"; // hide question card
+      launchConfettiBlast(100); // Big center blast
+      showFinalMessage();
+      // continuous small confetti
+      setInterval(() => launchConfettiFall(5), 400);
+    }
+
+    function moveNo(button) {
+      const maxX = window.innerWidth - button.offsetWidth - 20;
+      const maxY = window.innerHeight - button.offsetHeight - 20;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      button.style.left = `${x}px`;
+      button.style.top = `${y}px`;
+      button.classList.add('wiggle');
+      setTimeout(() => button.classList.remove('wiggle'), 400);
+    }
+
+    noBtn.addEventListener('mouseover', () => moveNo(noBtn));
+    noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(noBtn); });
+
+    // Big confetti burst from center
+    function launchConfettiBlast(amount) {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      for (let i = 0; i < amount; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        confetti.style.left = centerX + 'px';
+        confetti.style.top = centerY + 'px';
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * 300;
+        const x = distance * Math.cos(angle);
+        const y = distance * Math.sin(angle);
+        confetti.style.transition = 'transform 1.5s ease-out, opacity 1.5s ease-out';
+        document.body.appendChild(confetti);
+        setTimeout(() => {
+          confetti.style.transform = `translate(${x}px, ${y}px)`;
+          confetti.style.opacity = 0;
+        }, 10);
+        setTimeout(() => confetti.remove(), 1600);
+      }
+    }
+
+    // Continuous falling confetti
+    function launchConfettiFall(amount) {
+      for (let i = 0; i < amount; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.top = '-10px';
+        document.body.appendChild(confetti);
+        const fallDuration = Math.random() * 3 + 2;
+        confetti.style.animation = `fall ${fallDuration}s linear forwards`;
+        setTimeout(() => confetti.remove(), fallDuration * 1000);
+      }
+    }
+
+    function showFinalMessage() {
+      const msg = document.createElement("div");
+      msg.classList.add("final-message");
+      msg.textContent = "He said YES! 💖";
+      document.body.appendChild(msg);
+    }
+  </script>
+</body>
+</html>
